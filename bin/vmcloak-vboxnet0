@@ -34,4 +34,4 @@ fi
 # Configure the hostonly interface and automatically enable it (also in
 # case it already existed but was disabled).
 VBoxManage hostonlyif ipconfig vboxnet0 --ip "$IPADDR" --netmask "$NETMASK"
-VBoxManage dhcpserver remove --ifname vboxnet0
+VBoxManage dhcpserver modify --netname HostInterfaceNetworking-vboxnet0 --disable
