@@ -4,11 +4,11 @@
 # See the file 'docs/LICENSE.txt' for copying permission.
 
 if [ "$1" = "-h" ]; then
-    echo "Usage: $0 [ipaddr] [netmask]"
+    echo "Usage: $0 [ipaddr] [netmask] [lower_ipaddr] [upper_ipaddr]"
     echo "    $0 192.168.57.1"
     echo
     echo "Defaults to:"
-    echo "    $0 192.168.56.1 255.255.255.0"
+    echo "    $0 192.168.56.1 255.255.255.0 192.168.56.100 192.168.56.150"
     exit
 fi
 
@@ -31,7 +31,21 @@ else
     NETMASK="255.255.255.0"
 fi
 
+if [ "$#" -ne 0 ]; then
+    LOWERIPADDR="$1"
+    shift
+else
+    LOWERIPADDR="192.168.56.100"
+fi
+
+if [ "$#" -ne 0 ]; then
+    UPPERIPADDR="$1"
+    shift
+else
+    UPPERIPADDR="192.168.56.150"
+fi
+
 # Configure the hostonly interface and automatically enable it (also in
 # case it already existed but was disabled).
 VBoxManage hostonlyif ipconfig vboxnet0 --ip "$IPADDR" --netmask "$NETMASK"
-VBoxManage dhcpserver modify --netname HostInterfaceNetworking-vboxnet0 --disable
+VBoxManage dhcpserver modify --netname HostInterfaceNetworking-vboxnet0 --ip "$IPADDR" --netmask "$NETMASK" --lowerip "$LOWIPADDR" --upperip "$HIGHIPADDR"
